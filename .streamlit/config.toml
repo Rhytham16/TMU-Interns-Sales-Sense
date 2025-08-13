@@ -1,0 +1,13 @@
+[browser]
+gatherUsageStats = false
+[theme]
+font="sans serif"
+base="light"
+[runner]
+fastReruns = true
+[server]
+runOnSave = true
+maxUploadSize = 400
+port = 8615
+[client]
+showErrorDetails = true
