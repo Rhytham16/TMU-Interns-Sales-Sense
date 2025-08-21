@@ -1,5 +1,4 @@
 from dotenv import load_dotenv
-
 load_dotenv(dotenv_path=r"backend\.env")
 
 from fastapi import FastAPI, UploadFile, File, Form
@@ -71,14 +70,14 @@ async def analyze_call_combined(
     call_types: str = Form(...)
 ):
     try:
-        print(f"📁 Processing: {audio_file.filename} ({len(audio_file.file.read())} bytes)")
-        audio_file.file.seek(0)  # Reset file pointer after reading size
-        
         # 1) Save and transcribe
         file_location = os.path.join(UPLOAD_DIR, audio_file.filename)
         with open(file_location, "wb") as buffer:
             shutil.copyfileobj(audio_file.file, buffer)
         
+        file_size = os.path.getsize(file_location)
+        print(f"📁 Processing: {audio_file.filename} ({file_size} bytes)")
+
         print("🎤 Ultra-fast transcription (max 45s)...")
         transcript = transcribe_mp3(file_location)
         print(f"✅ Transcribed in {len(transcript)} characters")
@@ -96,14 +95,12 @@ async def analyze_call_combined(
             print("🚀 Multi-agent analysis (max 25s)...")
             analysis_result = analyze_call_multi_agent_fast(context, transcript)
             print("✅ All 3 agents completed")
-            
-            # Ensure we have all required keys for frontend
-            if not analysis_result.get("improvement_areas"):
-                analysis_result["improvement_areas"] = ["Continue developing sales skills", "Practice active listening"]
-            if not analysis_result.get("coaching_tips"):
-                analysis_result["coaching_tips"] = [{"skill": "General", "tip": "Keep building rapport with prospects"}]
-            
-            print(f"🎉 TOTAL PROCESSING: Analysis complete with ALL 3 AGENTS!")
+
+            # Ensure required frontend keys exist
+            analysis_result.setdefault("improvement_areas", ["Continue developing sales skills", "Practice active listening"])
+            analysis_result.setdefault("coaching_tips", [{"skill": "General", "tip": "Keep building rapport with prospects"}])
+
+            print("🎉 TOTAL PROCESSING: Analysis complete with ALL 3 AGENTS!")
             return analysis_result
         else:
             return {
@@ -112,7 +109,6 @@ async def analyze_call_combined(
                 "improvement_areas": ["Fix multi-agent system configuration"],
                 "coaching_tips": [{"skill": "System", "tip": "Contact technical support"}]
             }
-
     except Exception as e:
         print(f"❌ Error in analyze_call_combined: {e}")
         print(traceback.format_exc())
