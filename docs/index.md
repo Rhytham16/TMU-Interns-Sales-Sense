@@ -19,69 +19,18 @@ SalesSense gives instant, AI-powered feedback on your Dialpad calls—highlighti
 - **⚡ Fast Processing**: Complete analysis in under 30 seconds
 - **🎯 Sales-Focused**: Built specifically for sales call optimization
 
-## Quick Navigation
+## Quick Links
+- **Quick Start** – exact commands to run the app
+- **Backend** – FastAPI on port 8000
+- **Frontend** – Streamlit on port 8501
 
-<div class="grid cards" markdown>
-
--   :material-clock-fast:{ .lg .middle } **Quick Start**
-
-    ---
-
-    Get SalesSense running in 5 minutes
-
-    [:octicons-arrow-right-24: Installation Guide](installation.md)
-
--   :material-upload:{ .lg .middle } **Upload Calls**
-
-    ---
-
-    Learn how to upload and analyze your sales calls
-
-    [:octicons-arrow-right-24: User Guide](user-guide/uploading.md)
-
--   :material-chart-line:{ .lg .middle } **Understanding Results**
-
-    ---
-
-    Interpret analysis results and coaching insights
-
-    [:octicons-arrow-right-24: Results Guide](user-guide/results.md)
-
--   :material-code-braces:{ .lg .middle } **API Reference**
-
-    ---
-
-    Technical documentation for developers
-
-    [:octicons-arrow-right-24: API Docs](api/backend.md)
-
-</div>
-
-## Technology Stack
-
-- **Frontend**: Streamlit for interactive web interface
-- **Backend**: FastAPI for high-performance API
-- **AI/ML**: OpenAI GPT models with LangChain and LangGraph
-- **Audio**: Whisper for transcription, FFmpeg for processing
-- **Package Manager**: UV for fast dependency management
-
-## System Requirements
-
+## Requirements (Minimal)
 - Python 3.12+
-- OpenAI API key
-- FFmpeg for audio processing
-- 4GB+ RAM recommended
-- Windows, macOS, or Linux
+- OPENAI_API_KEY
+- ASSEMBLYAI_API_KEY
+- Windows/macOS/Linux
 
-!!! tip "Ready to get started?"
-    Head over to our [Installation Guide](installation.md) to set up SalesSense in minutes!
-
-## Support
-
-Need help? Check out our [troubleshooting guide](development/troubleshooting.md) or reach out to our team.
-
----
-
-<div align="center">
-  <p><strong>Built by <a href="https://cogentinfo.com">Cogent Infotech Innovation Lab</a></strong></p>
-</div>
+## What You Get
+- Transcription with speaker labels (AssemblyAI)
+- Executive summary and metrics (sentiment, talk-time, questions, objections)
+- Actionable coaching tips and next steps

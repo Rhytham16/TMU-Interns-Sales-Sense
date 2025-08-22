@@ -14,6 +14,24 @@ if 'analysis_results' in st.session_state and st.session_state.analysis_results:
     summary = results.get("summary", "No summary available.")
     st.write(summary)
 
+    # Add this after your Executive Summary section in results.py
+
+# Cache Status Display (Optional Enhancement)
+    if "cached" in results:
+        if results.get("cached", False):
+            st.success("⚡ **Cache Hit!** This analysis was retrieved instantly from cache - no processing required!")
+        else:
+            st.info("🔄 **Fresh Analysis** - This file was processed and cached for future use")
+
+# Add cache indicator in processing info
+    if "processing_time" in results:
+        cache_indicator = " (cached)" if results.get("cached", False) else ""
+        agents_info = results.get('agents_used', 'multi-agent system')
+        st.caption(f"⏱️ Analysis completed in {results['processing_time']}{cache_indicator} using {agents_info}")
+
+
+    
+
     # Metrics Section - FULLY COMPATIBLE with backend
     if "metrics" in results:
         metrics = results["metrics"]

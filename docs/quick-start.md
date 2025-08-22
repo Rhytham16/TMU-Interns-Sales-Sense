@@ -1,148 +1,92 @@
-# Quick Start Guide
+# Quick Start
 
-Get SalesSense up and running in 5 minutes! This guide assumes you've already completed the [installation](installation.md).
+Run SalesSense in minutes. Copy/paste these commands in order.
 
-## Launch SalesSense
+## 1) Create project folder and virtual environment
 
-### Terminal 1: Start Backend
-
-Navigate to your project directory
+### Windows (PowerShell)
 cd "D:\Sales Sense 2"
 
-Activate virtual environment
-.venv\Scripts\activate
+python -m venv .venv
 
-Start the backend server
+..venv\Scripts\activate
 
-uv run uvicorn backend.main:app --host 0.0.0.0 --port 8000 --reload
 
-text
+### macOS/Linux
+mkdir -p ~/SalesSense && cd ~/SalesSense
 
-!!! success "Backend Running"
-    You should see:
-    ```
-    INFO: Uvicorn running on http://0.0.0.0:8000
-    INFO: Application startup complete.
-    ```
+python3 -m venv .venv
 
-### Terminal 2: Start Frontend
+source .venv/bin/activate
 
-Open a **new terminal** and run:
 
-Navigate to project directory
-cd "D:\Sales Sense 2"
+## 2) Install dependencies
 
-Activate virtual environment
-.venv\Scripts\activate
+Using pyproject.toml (recommended):
 
-Start the frontend
-uv run streamlit run streamlit_app.py
+pip install -e .
 
-text
 
-!!! success "Frontend Running"
-    Your browser should automatically open to `http://localhost:8501`
+## 3) Add API keys
 
-## First Analysis
+Create a file: `backend/.env`
 
-### 1. Upload Audio File
+OPENAI_API_KEY=your_openai_api_key
 
-1. Click **"Data Ingestion"** in the sidebar
-2. Upload a sales call recording (.mp3, .wav, .m4a, or .aac)
-3. Fill in the required fields:
-   - **Participants**: Names and roles (e.g., "John Smith (Sales Rep), Jane Doe (Prospect)")
-   - **Call Details**: Context about the call
-   - **Call Type**: Select appropriate type(s)
+ASSEMBLYAI_API_KEY=your_assemblyai_api_key
 
-### 2. Analyze Call
 
-1. Click **"🚀 Analyze Call"**
-2. Wait for processing (usually 15-30 seconds)
-3. You'll see progress indicators for:
-   - Audio transcription
-   - Multi-agent analysis
+## 4) Start backend (FastAPI)
 
-### 3. View Results
-
-The system will automatically redirect you to the results page showing:
-
-- **📋 Executive Summary**: High-level call overview
-- **📈 Call Metrics**: Sentiment, talk ratios, questions, objections
-- **✅ Strengths**: What the rep did well
-- **🎯 Areas for Improvement**: Specific suggestions
-- **💡 Coaching Tips**: Actionable advice
-- **🎯 Next Steps**: Recommended follow-up actions
-
-## Understanding Your Results
-
-### Call Metrics Explained
-
-| Metric | Description |
-|--------|-------------|
-| **Overall Sentiment** | Customer's emotional tone (positive/neutral/negative) |
-| **Rep Talk Time** | Percentage of call time rep was speaking |
-| **Questions Asked** | Number of questions asked by the sales rep |
-| **Objections Detected** | Customer concerns or hesitations identified |
-| **Follow-ups Committed** | Number of next steps or commitments made |
-
-### Coaching Insights
-
-The AI provides three types of coaching:
-
-1. **Strengths**: Reinforces what worked well
-2. **Areas for Improvement**: Specific skills to develop
-3. **Coaching Tips**: Actionable advice with practice drills
-
-## Sample Test Call
-
-Don't have a sales call handy? Here's what to expect with a typical analysis:
-
-!!! example "Sample Results"
-    **Executive Summary**: "Discovery call with interested prospect discussing CRM needs. Rep effectively identified pain points around customer tracking and demonstrated strong listening skills. Customer expressed budget concerns but showed strong interest in a demo. Next step scheduled for product demonstration."
-
-    **Key Metrics**:
-    - Sentiment: Positive
-    - Rep Talk Time: 45%
-    - Questions Asked: 8
-    - Objections: 1 (Budget)
-
-## Common First-Time Issues
-
-### Audio File Issues
-- **Supported formats**: .mp3, .wav, .m4a, .aac
-- **Max file size**: 25MB
-- **Max duration**: 30 minutes for optimal performance
-
-### Backend Not Starting
-Check if port 8000 is in use
-netstat -ano | findstr :8000
-
-Kill process if needed (Windows)
-taskkill /PID <process_id> /F
+Open Terminal 1:
+python -m uvicorn backend.main:app --host 0.0.0.0 --port 8000 --reload
 
 text
 
-### Missing Analysis Results
-- Ensure your OpenAI API key is valid
-- Check that you have sufficient API credits
-- Verify the audio file contains actual conversation
-
-
-## Quick Commands Reference
-
-Start everything (run in separate terminals)
-Terminal 1 - Backend
-uv run uvicorn backend.main:app --host 0.0.0.0 --port 8000 --reload
-
-Terminal 2 - Frontend
-uv run streamlit run streamlit_app.py
-
-Check health
+Health check:
 curl http://localhost:8000/health
 
-View API docs
-Navigate to: http://localhost:8000/docs
 text
 
-!!! tip "Pro Tip"
-    Bookmark `http://localhost:8501` for quick access to your SalesSense dashboard!
+Expected: JSON with status ok and basic info.
+
+## 5) Start frontend (Streamlit)
+
+Open a new terminal (activate the same venv), then:
+streamlit run streamlit_app.py
+
+text
+
+Open:
+http://localhost:8501
+
+text
+
+## 6) First analysis (UI flow)
+
+- Go to “Data Ingestion”
+- Upload a call recording (.mp3, .wav, .m4a, .aac)
+- Fill in Participants, Call details, Call type
+- Click “Analyze Call”
+- You’ll be redirected to Results after processing
+
+## Useful endpoints
+
+- API docs: `http://localhost:8000/docs`
+- Health: `GET /health`
+- Transcribe: `POST /transcribe/` (file)
+- Analyze combined: `POST /analyze_call` (file + form)
+
+## Troubleshooting (fast)
+
+- Backend not starting: ensure port 8000 is free; activate the venv; restart terminal.
+- Frontend not starting: verify Streamlit is installed in the venv.
+- Empty analysis: check keys in `backend/.env` and API usage limits.
+- AssemblyAI errors: confirm `ASSEMBLYAI_API_KEY` and try a clean mp3/wav.
+
+## Tips
+
+- Re-uploading the same file with the same context returns cached results instantly.
+- Keep Windows project paths short (e.g., `D:\SalesSense`) to avoid long-path issues.
+text
+undefined

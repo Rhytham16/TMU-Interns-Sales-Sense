@@ -1,92 +1,14 @@
-site_name: SalesSense Documentation
-site_description: AI-powered sales call analysis with multi-agent coaching insights
+site_name: SalesSense Docs
+site_description: Simple docs to run SalesSense quickly
 site_author: Cogent Infotech Innovation Lab
-site_url: https://your-domain.com
 
-# Repository
-repo_name: SalesSense
-repo_url: https://github.com/your-username/salessense
-
-# Navigation
-nav:
-  - Home: index.md
-  - Getting Started:
-    - Installation: installation.md
-    - Quick Start: quick-start.md
-    - Configuration: configuration.md
-  - User Guide:
-    - Uploading Calls: user-guide/uploading.md
-    - Understanding Results: user-guide/results.md
-    - Best Practices: user-guide/best-practices.md
-  - API Reference:
-    - Backend API: api/backend.md
-    - Frontend Components: api/frontend.md
-  - Development:
-    - Architecture: development/architecture.md
-    - Contributing: development/contributing.md
-    - Troubleshooting: development/troubleshooting.md
-  - About: about.md
-
-# Theme
 theme:
   name: material
-  palette:
-    - scheme: default
-      primary: blue
-      accent: light blue
-      toggle:
-        icon: material/brightness-7
-        name: Switch to dark mode
-    - scheme: slate
-      primary: blue
-      accent: light blue
-      toggle:
-        icon: material/brightness-4
-        name: Switch to light mode
   features:
     - navigation.tabs
-    - navigation.sections
-    - navigation.expand
-    - navigation.path
-    - toc.follow
     - search.suggest
     - search.highlight
-    - content.tabs.link
-    - content.code.annotation
-    - content.code.copy
-  language: en
 
-# Plugins (FIXED - added mkdocstrings)
-plugins:
-  - search
-  - mkdocstrings
-
-# Markdown Extensions (FIXED - updated emoji config)
-markdown_extensions:
-  - pymdownx.highlight:
-      anchor_linenums: true
-  - pymdownx.inlinehilite
-  - pymdownx.snippets
-  - admonition
-  - pymdownx.arithmatex:
-      generic: true
-  - footnotes
-  - pymdownx.details
-  - pymdownx.superfences
-  - pymdownx.mark
-  - attr_list
-  - pymdownx.emoji:
-      emoji_index: !!python/name:material.extensions.emoji.twemoji
-      emoji_generator: !!python/name:material.extensions.emoji.to_svg
-
-# Extra
-extra:
-  social:
-    - icon: fontawesome/brands/github
-      link: https://github.com/your-username
-    - icon: fontawesome/brands/linkedin  
-      link: https://linkedin.com/company/cogent-infotech
-
-# Copyright
-copyright: |
-  &copy; 2025 <a href="https://cogentinfo.com" target="_blank" rel="noopener">Cogent Infotech</a>
+nav:
+  - Home: index.md
+  - Quick Start: quick-start.md
