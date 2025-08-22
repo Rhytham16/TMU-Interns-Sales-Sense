@@ -1,5 +1,18 @@
 import streamlit as st
 
+# --- PAGE CONFIGURATION ---
+st.set_page_config(
+    layout="wide",
+    page_title="SalesSense",
+    page_icon="📞",
+    menu_items={
+        'Get Help': 'mailto:support@example.com',
+        'Report a bug': 'mailto:support@example.com',
+        'About': "# Cogent Infotech Innovation Lab"
+    }
+)
+
+# --- HOME PAGE CONTENT ---
 st.title(":blue[:material/finance_mode: **SalesSense**]")
 
 st.markdown("""
@@ -17,14 +30,11 @@ st.caption("Built on real team calls for relevance. Designed for speed. Perfect 
 
 col1, col2, col3 = st.columns([3, 2, 3])
 with col2:
-    proceed = st.button(
+    if st.button(
         label="🚀 Proceed",
         type="primary",
         help="Click to upload your data and get started!",
         use_container_width=True
-    )
-
-if proceed:
-    st.success("Proceeding to Data Ingestion...")
-    # Navigate to upload page programmatically
-    st.switch_page("views/upload.py")
+    ):
+        st.success("Proceeding to Data Ingestion...")
+        st.switch_page("views/upload.py")

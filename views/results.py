@@ -1,11 +1,12 @@
 import streamlit as st
+import json
 
 st.title("📊 Sales Call Analysis Results")
 
 if 'analysis_results' in st.session_state and st.session_state.analysis_results:
     results = st.session_state.analysis_results
 
-    # Debug section (remove in production)
+    # Debug section (optional)
     with st.expander("🔍 Debug Info", expanded=False):
         st.json(results)
 
@@ -14,27 +15,22 @@ if 'analysis_results' in st.session_state and st.session_state.analysis_results:
     summary = results.get("summary", "No summary available.")
     st.write(summary)
 
-    # Add this after your Executive Summary section in results.py
+    # Cache Status Display
+    if results.get("cached", False):
+        st.success("⚡ **Cache Hit!** This analysis was retrieved instantly from cache - no processing required!")
+    else:
+        st.info("🔄 **Fresh Analysis** - This file was processed and cached for future use")
 
-# Cache Status Display (Optional Enhancement)
-    if "cached" in results:
-        if results.get("cached", False):
-            st.success("⚡ **Cache Hit!** This analysis was retrieved instantly from cache - no processing required!")
-        else:
-            st.info("🔄 **Fresh Analysis** - This file was processed and cached for future use")
-
-# Add cache indicator in processing info
+    # Processing Info
     if "processing_time" in results:
         cache_indicator = " (cached)" if results.get("cached", False) else ""
         agents_info = results.get('agents_used', 'multi-agent system')
         st.caption(f"⏱️ Analysis completed in {results['processing_time']}{cache_indicator} using {agents_info}")
 
-
-    
-
-    # Metrics Section - FULLY COMPATIBLE with backend
-    if "metrics" in results:
-        metrics = results["metrics"]
+    # --- Metrics Section ---
+    metrics = results.get("metrics", {})
+    if metrics:
+        st.markdown("---")
         st.markdown("## 📈 Call Metrics")
 
         col1, col2, col3 = st.columns(3)
@@ -58,44 +54,35 @@ if 'analysis_results' in st.session_state and st.session_state.analysis_results:
     else:
         st.warning("⚠️ Metrics data not available")
 
-    # Strengths Section
-    st.markdown("## ✅ Strengths Identified")
+    # --- Strengths Identified ---
     strengths = results.get("strengths", [])
+    st.markdown("---")
+    st.markdown("## ✅ Strengths Identified")
     if strengths and isinstance(strengths, list) and len(strengths) > 0:
-        # Filter out default messages
-        meaningful_strengths = [s for s in strengths if s not in ["No specific strengths identified.", "Call completed successfully"]]
-        if meaningful_strengths:
-            for strength in meaningful_strengths:
-                st.write(f"• {strength}")
-        else:
-            for strength in strengths[:2]:  # Show first 2 even if defaults
-                st.write(f"• {strength}")
+        for strength in strengths:
+            st.write(f"• {strength}")
     else:
         st.write("No specific strengths identified.")
 
-    # Areas for Improvement - MATCHES BACKEND KEY
+    # --- Areas for Improvement ---
+    areas = results.get("improvement_areas", [])
+    st.markdown("---")
     st.markdown("## 🎯 Areas for Improvement")
-    areas = results.get("improvement_areas", [])  # This key matches backend output
     if areas and isinstance(areas, list) and len(areas) > 0:
-        meaningful_areas = [a for a in areas if a not in ["No specific improvement areas identified.", "No specific areas for improvement."]]
-        if meaningful_areas:
-            for area in meaningful_areas:
-                st.write(f"• {area}")
-        else:
-            for area in areas[:2]:  # Show defaults if that's all we have
-                st.write(f"• {area}")
+        for area in areas:
+            st.write(f"• {area}")
     else:
         st.write("No specific improvement areas identified.")
 
-    # Customer Objections
+    # --- Customer Objections ---
     objections = results.get("customer_objections", [])
     if objections and len(objections) > 0:
+        st.markdown("---")
         st.markdown("## 🚫 Customer Objections & Responses")
         for i, obj in enumerate(objections, 1):
             if isinstance(obj, dict):
-                objection_title = obj.get('objection', 'Unknown')
+                objection_title = obj.get('objection', 'Unknown').title()
                 with st.expander(f"Objection {i}: {objection_title}"):
-                    # Handle both possible quote keys
                     quote = obj.get('moment_quote', obj.get('moment', 'No quote available'))
                     response = obj.get('suggested_response', 'No suggestion available')
                     st.write(f"**Customer said:** \"{quote}\"")
@@ -103,18 +90,18 @@ if 'analysis_results' in st.session_state and st.session_state.analysis_results:
             else:
                 st.write(f"• {obj}")
 
-    # Next Steps
-    st.markdown("## 🎯 Recommended Next Steps")
+    # --- Recommended Next Steps ---
     next_steps = results.get("next_steps", [])
+    st.markdown("---")
+    st.markdown("## 🎯 Recommended Next Steps")
     if next_steps and len(next_steps) > 0:
         for step in next_steps:
             if isinstance(step, dict):
                 owner = step.get('owner', '').title()
                 action = step.get('action', step.get('step', 'No action specified'))
                 due_by = step.get('due_by', '')
-                success_criteria = step.get('success_criteria', '')
                 
-                if owner and due_by:
+                if owner and action and due_by:
                     st.write(f"• **{owner}**: {action} (Due: {due_by})")
                 elif action:
                     st.write(f"• {action}")
@@ -125,9 +112,10 @@ if 'analysis_results' in st.session_state and st.session_state.analysis_results:
     else:
         st.write("No specific next steps identified.")
 
-    # Coaching Tips
-    st.markdown("## 💡 Coaching Tips")
+    # --- Coaching Tips ---
     tips = results.get("coaching_tips", [])
+    st.markdown("---")
+    st.markdown("## 💡 Coaching Tips")
     if tips and len(tips) > 0:
         for tip in tips:
             if isinstance(tip, dict):
@@ -139,9 +127,10 @@ if 'analysis_results' in st.session_state and st.session_state.analysis_results:
     else:
         st.write("No coaching tips available.")
 
-    # Notable Quotes
+    # --- Notable Quotes ---
     quotes = results.get("notable_quotes", [])
     if quotes and len(quotes) > 0:
+        st.markdown("---")
         st.markdown("## 💬 Notable Quotes")
         for quote in quotes:
             if isinstance(quote, dict):
@@ -155,29 +144,19 @@ if 'analysis_results' in st.session_state and st.session_state.analysis_results:
             else:
                 st.write(f"> \"{quote}\"")
 
-    # Processing Info
-    if "processing_time" in results:
-        st.caption(f"⏱️ Analysis completed in {results['processing_time']} using {results.get('agents_used', 'multi-agent system')}")
-
-    # Action Buttons
+    # --- Action Buttons ---
     st.markdown("---")
-    col1, col2, col3 = st.columns([2, 2, 2])
+    col1, col2 = st.columns([1, 1])
 
     with col1:
-        if st.button("🔄 Analyze Another Call", use_container_width=True):
+        if st.button("🔄 Analyze Another Call", type="secondary", use_container_width=True):
             if 'analysis_results' in st.session_state:
                 del st.session_state.analysis_results
-            st.session_state.upload_ready = False
             st.switch_page("views/upload.py")
 
     with col2:
-        if st.button("🏠 Go Home", use_container_width=True):
+        if st.button("🏠 Go Home", type="secondary", use_container_width=True):
             st.switch_page("views/home.py")
-
-    with col3:
-        if st.button("📋 Export Results", use_container_width=True):
-            st.balloons()
-            st.success("Results formatted for export!")
 
 else:
     st.info("📤 No analysis results found. Please upload a call and analyze it first.")

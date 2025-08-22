@@ -11,6 +11,15 @@ import hashlib
 import asyncio
 from datetime import datetime, timedelta
 
+
+from backend.logging_config import setup_logging
+
+ENV = os.getenv("APP_ENV", "dev")  # dev|prod
+setup_logging(ENV)
+import logging
+log = logging.getLogger("salessense.backend")
+
+
 from backend.crewai_transcription import transcribe_crew_ai, remove_file
 
 # Import your enhanced multi-agent system
@@ -241,6 +250,11 @@ async def analyze_call_combined(
             "notable_quotes": [],
             "cached": False
         }
+log.info("Backend starting…")
+log.debug("Loaded config and environment")
+log.warning("Potential config issue detected")
+log.error("Processing failed", exc_info=True)
+
 
 if __name__ == "__main__":
     import uvicorn
